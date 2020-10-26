@@ -1,43 +1,35 @@
 fun main() {
-    val cardType = "visa"
+    val cardType = "vk pay"
     val lastTransaction = 100_000
-    val previousTransactions = 140_000
+    val previousTransaction = 0
 
-    commissionCalc(cardType, lastTransaction, previousTransactions)
+    val result = commissionCalc(cardType, lastTransaction, previousTransaction)
+    println("Комиссия составляет: $result коп.")
 }
 
-fun commissionCalc(cardType: String, lastTransaction: Int, previousTransactions: Int) {
+fun commissionCalc(cardType: String, lastTransaction: Int, previousTransaction: Int): Int {
+    var commission = 0
     when (cardType) {
-        "vk pay" -> if (previousTransactions > 40_000) println("Превышена сумма транзакций в месяц.")
-        else vkPay(lastTransaction)
-
-        "visa", "mir" -> if (previousTransactions > 600_000) println("Превышена сумма транзакций в месяц.")
-        else visa(lastTransaction)
-
-        "mastercard", "maestro" -> if (previousTransactions > 600_000) println("Превышена сумма транзакций в месяц.")
-        else mastercard(lastTransaction)
+        "vk pay"  -> commission = 0
+        "mastercard" -> commission = commissionCountForMasterCard(lastTransaction, previousTransaction)
+        "visa", "mir" -> commission = commissionCountForVisa(lastTransaction)
     }
+    return commission
 }
 
-fun mastercard(lastTransaction: Int) {
-    if (lastTransaction > 150_000) println("Превышена сумма последней транзакции.")
-    else println("Комиссии нет.")
+fun commissionCountForMasterCard(lastTransaction: Int, previousTransaction: Int): Int {
+    val commissionInPercent = 0.006
+
+    return if (previousTransaction > 7_500_000)
+        (lastTransaction * commissionInPercent).toInt() + 2_000
+    else 0
 }
 
-fun visa(lastTransaction: Int) {
-    if (lastTransaction > 150_000) println("Превышена сумма последней транзакции.")
-    else {
-        val commissionInPercent = 0.0075
-        val minCommission = 35
-        val commission = (lastTransaction * commissionInPercent)
-        val result = if (commission > minCommission) commission * 100 else minCommission * 100
-        println("Комиссия составляет: $result коп.")
-    }
-}
-
-fun vkPay(lastTransaction: Int) {
-    if (lastTransaction > 15_000) println("Превышена сумма последней транзакции.")
-    else println("Комиссии нет.")
+fun commissionCountForVisa(lastTransaction: Int): Int {
+    val commissionInPercent = 0.0075
+    val minCommission = 35
+    val commission = (lastTransaction * commissionInPercent).toInt()
+    return if (commission > minCommission) commission * 100 else minCommission * 100
 }
 
 
