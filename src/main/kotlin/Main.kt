@@ -27,9 +27,9 @@ fun commissionCountForMasterCard(lastTransaction: Int, previousTransaction: Int)
 
 fun commissionCountForVisa(lastTransaction: Int): Int {
     val commissionInPercent = 0.0075
-    val minCommission = 35
+    val minCommission = 3_500
     val commission = (lastTransaction * commissionInPercent).toInt()
-    return if (commission > minCommission) commission * 100 else minCommission * 100
+    return if (commission > minCommission) commission else minCommission
 }
 
 
