@@ -74,6 +74,6 @@ class MainKtTest {
                 lastTransaction = userLastTransaction,
                 previousTransaction = userPreviousTransaction
         )
-        assertEquals(0, result)
+        assertEquals(10, result)
     }
 }
